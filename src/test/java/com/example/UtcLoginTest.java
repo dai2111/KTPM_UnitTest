@@ -353,6 +353,22 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC14: Kiểm tra liên kết Ý kiến phản hồi ở footer")
+    @Description("Kiểm tra liên kết 'Ý kiến phản hồi' ở chân trang có liên kết mailto:hotrokythuat@utc.edu.vn.")
+    @Severity(SeverityLevel.MINOR)
+    @Story("Liên kết hỗ trợ chân trang")
+    public void testFeedbackFooterLink() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement feedbackLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(@href, 'mailto:hotrokythuat@utc.edu.vn') and contains(text(), 'Ý kiến phản hồi')]")));
+        assertThat(feedbackLink.getAttribute("href")).isEqualTo("mailto:hotrokythuat@utc.edu.vn");
+
+        takeScreenshot("TC14_Lien_Ket_Y_Kien_Phan_Hoi");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

@@ -174,6 +174,27 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC4: Sai tên đăng nhập, đúng định dạng mật khẩu")
+    @Description("Kiểm tra đăng nhập khi nhập sai username (huongthunguyen) và password (123456@utc).")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Đăng nhập sai username")
+    public void testLoginWithInvalidUsername() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("huongthunguyen", "123456@utc");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        String pageSource = driver.getPageSource();
+        assertThat(pageSource).containsAnyOf("Tài khoản hoặc mật khẩu không đúng", "không đúng", "Login");
+
+        takeScreenshot("TC4_Ket_Qua_Sai_Username");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

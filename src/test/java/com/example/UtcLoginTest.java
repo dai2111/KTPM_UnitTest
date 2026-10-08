@@ -28,6 +28,7 @@ public class UtcLoginTest {
     private final By usernameBy = By.name("username");
     private final By passwordBy = By.name("userpwd");
     private final By submitButtonBy = By.cssSelector("input.submit_login");
+    private final By persistentCheckboxBy = By.id("persistent");
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -152,6 +153,24 @@ public class UtcLoginTest {
         assertThat(driver.getCurrentUrl()).contains("/Login");
 
         takeScreenshot("Ket_Qua_Khong_Dien_Mat_Khau");
+        pause(700);
+    }
+
+    @Test
+    @DisplayName("Test 4: Điền mật khẩu nhưng không điền tài khoản")
+    @Description("Kiểm tra phản hồi của hệ thống khi để trống tên đăng nhập.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Đăng nhập không điền tài khoản")
+    public void testLoginWithPasswordOnly() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("", "123456@utc");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("Ket_Qua_Khong_Dien_Tai_Khoan");
         pause(700);
     }
 

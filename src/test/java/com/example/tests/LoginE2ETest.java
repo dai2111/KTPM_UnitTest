@@ -206,7 +206,7 @@ public class LoginE2ETest extends BaseTest {
     }
 
     @Test
-    @DisplayName("TC16: Đăng nhập sai mật khẩu 5 lần liên tiếp")
+    @DisplayName("TC05: Đăng nhập sai mật khẩu 5 lần liên tiếp")
     @Description("Kiểm tra khi nhập sai mật khẩu nhiều lần liên tiếp (5 lần), hệ thống tiếp tục từ chối đăng nhập và giữ an toàn.")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Bảo mật chống tấn công Brute-force")

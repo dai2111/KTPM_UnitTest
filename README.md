@@ -16,8 +16,6 @@ KTPM_UnitTest/
 ├── pom.xml
 ├── .gitignore
 ├── README.md
-├── TEST_CASES.md
-├── TEST_CASES_FULL.xlsx
 └── src/
     ├── main/java/com/example/
     │   └── App.java
@@ -64,6 +62,6 @@ Lệnh này sẽ tự động:
 
 > 💡 **Mẹo:** Nếu muốn xóa kết quả cũ và chạy lại từ đầu cho sạch sẽ:
 ```powershell
-.\mvnw clean test -Dtest=UtcLoginTest
+.\mvnw clean test -Dtest=LoginE2ETest
 .\mvnw allure:serve
 ```

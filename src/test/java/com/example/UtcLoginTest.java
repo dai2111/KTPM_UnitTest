@@ -280,6 +280,34 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC11: Đăng nhập bằng phím Enter")
+    @Description("Kiểm tra khi người dùng nhập thông tin và nhấn phím Enter trên bàn phím, form được gửi đi bình thường.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Gửi form bằng bàn phím")
+    public void testLoginByPressingEnter() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameBy));
+        WebElement passwordField = driver.findElement(passwordBy);
+
+        usernameField.sendKeys("huongnt");
+        passwordField.sendKeys("123456@utc");
+
+        takeScreenshot("TC11_Truoc_Khi_Nhan_Enter");
+        pause(500);
+
+        // Nhấn phím Enter trên ô mật khẩu
+        passwordField.sendKeys(org.openqa.selenium.Keys.ENTER);
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("TC11_Sau_Khi_Nhan_Enter");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

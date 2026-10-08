@@ -337,6 +337,22 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC13: Kiểm tra liên kết Trung tâm trợ giúp ở footer")
+    @Description("Kiểm tra liên kết 'Trung tâm trợ giúp' ở chân trang chuyển hướng đúng địa chỉ http://hotrokythuat.utc.edu.vn.")
+    @Severity(SeverityLevel.MINOR)
+    @Story("Liên kết hỗ trợ chân trang")
+    public void testHelpCenterFooterLink() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement helpCenterLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(@href, 'hotrokythuat.utc.edu.vn') and contains(text(), 'Trung tâm trợ giúp')]")));
+        assertThat(helpCenterLink.getAttribute("href")).contains("hotrokythuat.utc.edu.vn");
+
+        takeScreenshot("TC13_Lien_Ket_Trung_Tam_Tro_Giup");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

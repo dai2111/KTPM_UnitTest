@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -94,7 +95,7 @@ public class UtcLoginTest {
     }
 
     @Test
-    @DisplayName("Test 1: Mở trang web đăng nhập UTC và đóng lại")
+    @DisplayName("TC00: Mở trang web đăng nhập UTC và đóng lại")
     @Description("Kiểm tra mở trình duyệt, tải trang đăng nhập thành công và hiển thị đủ các trường.")
     @Severity(SeverityLevel.BLOCKER)
     @Story("Mở và đóng trang web")
@@ -113,13 +114,49 @@ public class UtcLoginTest {
         assertThat(submitButton.isDisplayed()).isTrue();
         assertThat(submitButton.getAttribute("value")).isEqualTo("Đăng nhập");
 
-        takeScreenshot("Giao_Dien_Trang_Dang_Nhap");
+        takeScreenshot("TC00_Giao_Dien_Trang_Dang_Nhap");
         pause(700);
     }
 
     @Test
-    @DisplayName("Test 2: Đăng nhập tài khoản huongnt và mật khẩu sai (123456@utc)")
-    @Description("Kiểm tra thông báo lỗi khi người dùng nhập sai thông tin tài khoản hoặc mật khẩu.")
+    @DisplayName("TC01: Để trống Tên đăng nhập (chỉ điền mật khẩu)")
+    @Description("Kiểm tra khi để trống tài khoản và điền mật khẩu rồi bấm Đăng nhập, hệ thống không cho phép đăng nhập.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Đăng nhập không điền tài khoản")
+    public void testLoginWithPasswordOnly() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("", "123456@utc");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("TC01_Ket_Qua_Khong_Dien_Tai_Khoan");
+        pause(700);
+    }
+
+    @Test
+    @DisplayName("TC02: Chưa nhập mật khẩu (chỉ điền Tên đăng nhập)")
+    @Description("Kiểm tra khi điền tài khoản và để trống mật khẩu rồi bấm Đăng nhập, hệ thống không cho phép đăng nhập.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Đăng nhập không điền mật khẩu")
+    public void testLoginWithUsernameOnly() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("huongnt", "");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("TC02_Ket_Qua_Khong_Dien_Mat_Khau");
+        pause(700);
+    }
+
+    @Test
+    @DisplayName("TC03: Đúng tên đăng nhập, sai mật khẩu")
+    @Description("Kiểm tra thông báo lỗi khi người dùng nhập đúng username (huongnt) nhưng sai password (123456@utc).")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Đăng nhập thất bại do sai thông tin")
     public void testLoginWithInvalidCredentials() {
@@ -134,48 +171,12 @@ public class UtcLoginTest {
         String pageSource = driver.getPageSource();
         assertThat(pageSource).containsAnyOf("Tài khoản hoặc mật khẩu không đúng", "không đúng", "Login");
 
-        takeScreenshot("Ket_Qua_Dang_Nhap_Sai");
+        takeScreenshot("TC03_Ket_Qua_Dang_Nhap_Sai");
         pause(700);
     }
 
     @Test
-    @DisplayName("Test 3: Điền tài khoản nhưng không điền mật khẩu")
-    @Description("Kiểm tra phản hồi của hệ thống khi để trống mật khẩu.")
-    @Severity(SeverityLevel.NORMAL)
-    @Story("Đăng nhập không điền mật khẩu")
-    public void testLoginWithUsernameOnly() {
-        driver.get(LOGIN_URL);
-        pause(500);
-
-        doLogin("huongnt", "");
-
-        wait.until(ExpectedConditions.urlContains("/Login"));
-        assertThat(driver.getCurrentUrl()).contains("/Login");
-
-        takeScreenshot("Ket_Qua_Khong_Dien_Mat_Khau");
-        pause(700);
-    }
-
-    @Test
-    @DisplayName("Test 4: Điền mật khẩu nhưng không điền tài khoản")
-    @Description("Kiểm tra phản hồi của hệ thống khi để trống tên đăng nhập.")
-    @Severity(SeverityLevel.NORMAL)
-    @Story("Đăng nhập không điền tài khoản")
-    public void testLoginWithPasswordOnly() {
-        driver.get(LOGIN_URL);
-        pause(500);
-
-        doLogin("", "123456@utc");
-
-        wait.until(ExpectedConditions.urlContains("/Login"));
-        assertThat(driver.getCurrentUrl()).contains("/Login");
-
-        takeScreenshot("Ket_Qua_Khong_Dien_Tai_Khoan");
-        pause(700);
-    }
-
-    @Test
-    @DisplayName("TC4: Sai tên đăng nhập, đúng định dạng mật khẩu")
+    @DisplayName("TC04: Sai tên đăng nhập, đúng định dạng mật khẩu")
     @Description("Kiểm tra đăng nhập khi nhập sai username (huongthunguyen) và password (123456@utc).")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Đăng nhập sai username")
@@ -191,12 +192,12 @@ public class UtcLoginTest {
         String pageSource = driver.getPageSource();
         assertThat(pageSource).containsAnyOf("Tài khoản hoặc mật khẩu không đúng", "không đúng", "Login");
 
-        takeScreenshot("TC4_Ket_Qua_Sai_Username");
+        takeScreenshot("TC04_Ket_Qua_Sai_Username");
         pause(700);
     }
 
     @Test
-    @DisplayName("TC7: Đăng nhập bằng e-mail UTC chuyển hướng sang Google")
+    @DisplayName("TC07: Đăng nhập bằng e-mail UTC chuyển hướng sang Google")
     @Description("Kiểm tra khi click nút 'Đăng nhập bằng e-mail UTC', hệ thống chuyển hướng sang trang đăng nhập Google OAuth.")
     @Severity(SeverityLevel.NORMAL)
     @Story("Đăng nhập bằng OAuth Google")
@@ -207,19 +208,18 @@ public class UtcLoginTest {
         WebElement googleLoginBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.button")));
         assertThat(googleLoginBtn.getText()).contains("Đăng nhập bằng e-mail UTC");
 
-        takeScreenshot("TC7_Truoc_Khi_Click_Google_Login");
+        takeScreenshot("TC07_Truoc_Khi_Click_Google_Login");
         googleLoginBtn.click();
 
-        // Đợi chuyển hướng sang accounts.google.com
         wait.until(ExpectedConditions.urlContains("accounts.google.com"));
         assertThat(driver.getCurrentUrl()).contains("accounts.google.com");
 
-        takeScreenshot("TC7_Sau_Khi_Chuyen_Huong_Google");
+        takeScreenshot("TC07_Sau_Khi_Chuyen_Huong_Google");
         pause(700);
     }
 
     @Test
-    @DisplayName("TC8: Kiểm tra liên kết Quên mật khẩu")
+    @DisplayName("TC08: Kiểm tra liên kết Quên mật khẩu")
     @Description("Kiểm tra khi click vào liên kết 'Bạn quên mật khẩu đăng nhập ?', hệ thống chuyển hướng đúng trang khôi phục mật khẩu.")
     @Severity(SeverityLevel.NORMAL)
     @Story("Khôi phục mật khẩu")
@@ -230,19 +230,18 @@ public class UtcLoginTest {
         WebElement forgotPasswordLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(@href, '/Login/GetPass')]")));
         assertThat(forgotPasswordLink.getText()).contains("Bạn quên mật khẩu đăng nhập ?");
 
-        takeScreenshot("TC8_Truoc_Khi_Click_Quen_Mat_Khau");
+        takeScreenshot("TC08_Truoc_Khi_Click_Quen_Mat_Khau");
         forgotPasswordLink.click();
 
-        // Đợi chuyển hướng sang /Login/GetPass
         wait.until(ExpectedConditions.urlContains("/Login/GetPass"));
         assertThat(driver.getCurrentUrl()).contains("/Login/GetPass");
 
-        takeScreenshot("TC8_Sau_Khi_Vao_Trang_Quen_Mat_Khau");
+        takeScreenshot("TC08_Sau_Khi_Vao_Trang_Quen_Mat_Khau");
         pause(700);
     }
 
     @Test
-    @DisplayName("TC9: Để trống cả Tên đăng nhập và Mật khẩu")
+    @DisplayName("TC09: Để trống cả Tên đăng nhập và Mật khẩu")
     @Description("Kiểm tra khi để trống cả hai trường tài khoản và mật khẩu rồi bấm Đăng nhập, hệ thống không cho phép đăng nhập.")
     @Severity(SeverityLevel.NORMAL)
     @Story("Đăng nhập để trống toàn bộ thông tin")
@@ -255,7 +254,7 @@ public class UtcLoginTest {
         wait.until(ExpectedConditions.urlContains("/Login"));
         assertThat(driver.getCurrentUrl()).contains("/Login");
 
-        takeScreenshot("TC9_Ket_Qua_De_Trong_Ca_Hai_Truong");
+        takeScreenshot("TC09_Ket_Qua_De_Trong_Ca_Hai_Truong");
         pause(700);
     }
 
@@ -270,18 +269,16 @@ public class UtcLoginTest {
 
         WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(passwordBy));
         
-        // Kiểm tra thuộc tính type phải là password
         String fieldType = passwordField.getAttribute("type");
         assertThat(fieldType).isEqualTo("password");
 
-        // Nhập mật khẩu thử nghiệm
         passwordField.sendKeys("Secret123@");
         takeScreenshot("TC10_Mat_Khau_An");
         pause(700);
     }
 
     @Test
-    @DisplayName("TC11: Đăng nhập bằng phím Enter")
+    @DisplayName("TC11: Đăng nhập bằng phím Enter thay vì click nút")
     @Description("Kiểm tra khi người dùng nhập thông tin và nhấn phím Enter trên bàn phím, form được gửi đi bình thường.")
     @Severity(SeverityLevel.NORMAL)
     @Story("Gửi form bằng bàn phím")
@@ -298,8 +295,7 @@ public class UtcLoginTest {
         takeScreenshot("TC11_Truoc_Khi_Nhan_Enter");
         pause(500);
 
-        // Nhấn phím Enter trên ô mật khẩu
-        passwordField.sendKeys(org.openqa.selenium.Keys.ENTER);
+        passwordField.sendKeys(Keys.ENTER);
 
         wait.until(ExpectedConditions.urlContains("/Login"));
         assertThat(driver.getCurrentUrl()).contains("/Login");
@@ -320,16 +316,13 @@ public class UtcLoginTest {
         WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameBy));
         WebElement passwordField = driver.findElement(passwordBy);
 
-        // Click focus vào ô username
         usernameField.click();
         takeScreenshot("TC12_Focus_Username");
         pause(500);
 
-        // Nhấn phím Tab
-        usernameField.sendKeys(org.openqa.selenium.Keys.TAB);
+        usernameField.sendKeys(Keys.TAB);
         pause(500);
 
-        // Kiểm tra phần tử đang được focus là ô mật khẩu
         WebElement activeElement = driver.switchTo().activeElement();
         assertThat(activeElement.getAttribute("name")).isEqualTo("userpwd");
 

@@ -241,6 +241,24 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC9: Để trống cả Tên đăng nhập và Mật khẩu")
+    @Description("Kiểm tra khi để trống cả hai trường tài khoản và mật khẩu rồi bấm Đăng nhập, hệ thống không cho phép đăng nhập.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Đăng nhập để trống toàn bộ thông tin")
+    public void testLoginWithBothFieldsEmpty() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("", "");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("TC9_Ket_Qua_De_Trong_Ca_Hai_Truong");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

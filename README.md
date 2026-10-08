@@ -9,44 +9,40 @@ Dự án Java Maven đã được thiết lập sẵn với các thư viện ki�
 
 ---
 
-## 📁 Cấu trúc thư mục
+## 📁 Cấu trúc thư mục chuẩn Page Object Model (POM)
 
 ```
 KTPM_UnitTest/
-├── pom.xml                                   # Cấu hình dependencies Maven
+├── pom.xml
 ├── .gitignore
 ├── README.md
+├── TEST_CASES.md
+├── TEST_CASES_FULL.xlsx
 └── src/
     ├── main/java/com/example/
-    │   └── App.java                          # Mã nguồn chính
+    │   └── App.java
     └── test/java/com/example/
-        ├── SeleniumSampleTest.java           # Test case mẫu
-        └── UtcLoginTest.java                 # Bộ 4 test case cho trang Văn phòng điện tử UTC
+        ├── base/
+        │   └── BaseTest.java             # Quản lý khởi tạo WebDriver, timeouts, tearDown
+        ├── pages/
+        │   ├── BasePage.java             # Thao tác dùng chung: wait, click, type, screenshot
+        │   └── LoginPage.java            # Page Object cho Form đăng nhập UTC
+        └── tests/
+            └── LoginE2ETest.java         # Toàn bộ Test Scripts E2E cho chức năng Đăng nhập
 ```
-
----
-
-## 🧪 Chi tiết các Test Case ([UtcLoginTest.java](file:///q:/KTPM/KTPM_UnitTest/src/test/java/com/example/UtcLoginTest.java))
-
-Trang kiểm thử: `https://vanphongdientu.utc.edu.vn/Login`
-
-1. **Test 1 (`testOpenAndCloseBrowser`)**: Mở trang web kiểm tra tiêu đề, kiểm tra form đăng nhập hiển thị và tự động đóng trình duyệt.
-2. **Test 2 (`testLoginWithInvalidCredentials`)**: Nhập tài khoản `huongnt`, mật khẩu sai `123456@utc`, bấm Đăng nhập và kiểm tra thông báo lỗi.
-3. **Test 3 (`testLoginWithUsernameOnly`)**: Nhập tài khoản `huongnt`, để trống mật khẩu, bấm Đăng nhập và xác minh hệ thống giữ nguyên trang đăng nhập.
-4. **Test 4 (`testLoginWithPasswordOnly`)**: Để trống tài khoản, nhập mật khẩu `123456@utc`, bấm Đăng nhập và xác minh hệ thống giữ nguyên trang đăng nhập.
 
 ---
 
 ## 🚀 Hướng dẫn chạy
 
 ### 1. Chạy trong IDE (IntelliJ IDEA / Eclipse / VS Code)
-1. Mở file [UtcLoginTest.java](file:///q:/KTPM/KTPM_UnitTest/src/test/java/com/example/UtcLoginTest.java).
-2. Nhấn nút **Run** (biểu tượng mũi tên xanh cạnh tên class hoặc từng phương thức test).
+1. Mở file [LoginE2ETest.java](file:///q:/KTPM/KTPM_UnitTest/src/test/java/com/example/tests/LoginE2ETest.java).
+2. Nhấn nút **Run** (biểu tượng mũi tên xanh ▶️ cạnh tên class hoặc từng test case).
 
 ### 2. Chạy qua dòng lệnh Terminal
 ```powershell
-# Chạy bộ test UTC Login (sẽ tự động sinh dữ liệu báo cáo Allure)
-.\mvnw test -Dtest=UtcLoginTest
+# Chạy toàn bộ Test E2E
+.\mvnw test -Dtest=LoginE2ETest
 ```
 
 ---

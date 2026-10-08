@@ -259,6 +259,27 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC10: Kiểm tra mật khẩu hiển thị dưới dạng ký tự ẩn")
+    @Description("Kiểm tra ô nhập mật khẩu có thuộc tính type='password' để ẩn ký tự người dùng nhập.")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Bảo mật mật khẩu")
+    public void testPasswordFieldMasked() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(passwordBy));
+        
+        // Kiểm tra thuộc tính type phải là password
+        String fieldType = passwordField.getAttribute("type");
+        assertThat(fieldType).isEqualTo("password");
+
+        // Nhập mật khẩu thử nghiệm
+        passwordField.sendKeys("Secret123@");
+        takeScreenshot("TC10_Mat_Khau_An");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

@@ -195,6 +195,29 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC7: Đăng nhập bằng e-mail UTC chuyển hướng sang Google")
+    @Description("Kiểm tra khi click nút 'Đăng nhập bằng e-mail UTC', hệ thống chuyển hướng sang trang đăng nhập Google OAuth.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Đăng nhập bằng OAuth Google")
+    public void testLoginWithEmailUtcRedirect() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement googleLoginBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.button")));
+        assertThat(googleLoginBtn.getText()).contains("Đăng nhập bằng e-mail UTC");
+
+        takeScreenshot("TC7_Truoc_Khi_Click_Google_Login");
+        googleLoginBtn.click();
+
+        // Đợi chuyển hướng sang accounts.google.com
+        wait.until(ExpectedConditions.urlContains("accounts.google.com"));
+        assertThat(driver.getCurrentUrl()).contains("accounts.google.com");
+
+        takeScreenshot("TC7_Sau_Khi_Chuyen_Huong_Google");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

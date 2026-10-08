@@ -369,6 +369,24 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC15: Đăng nhập với Tên đăng nhập chứa khoảng trắng")
+    @Description("Kiểm tra khi nhập username chứa khoảng trắng ở đầu/cuối ('  huongnt  '), hệ thống xử lý trim hoặc từ chối đăng nhập.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Xử lý chuỗi khoảng trắng")
+    public void testLoginWithWhitespaceInUsername() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("  huongnt  ", "123456@utc");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("TC15_Ket_Qua_Username_Khoang_Trang");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

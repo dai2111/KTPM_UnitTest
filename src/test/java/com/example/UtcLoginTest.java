@@ -308,6 +308,35 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC12: Kiểm tra phím Tab chuyển đổi giữa các ô nhập liệu")
+    @Description("Kiểm tra khi nhấn phím Tab từ ô Tên đăng nhập, con trỏ chuột tự động chuyển focus sang ô Mật khẩu.")
+    @Severity(SeverityLevel.MINOR)
+    @Story("Điều hướng bằng bàn phím")
+    public void testTabKeySwitchFocus() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameBy));
+        WebElement passwordField = driver.findElement(passwordBy);
+
+        // Click focus vào ô username
+        usernameField.click();
+        takeScreenshot("TC12_Focus_Username");
+        pause(500);
+
+        // Nhấn phím Tab
+        usernameField.sendKeys(org.openqa.selenium.Keys.TAB);
+        pause(500);
+
+        // Kiểm tra phần tử đang được focus là ô mật khẩu
+        WebElement activeElement = driver.switchTo().activeElement();
+        assertThat(activeElement.getAttribute("name")).isEqualTo("userpwd");
+
+        takeScreenshot("TC12_Focus_Password_Sau_Khi_Tab");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

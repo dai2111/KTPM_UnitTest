@@ -218,6 +218,29 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC8: Kiểm tra liên kết Quên mật khẩu")
+    @Description("Kiểm tra khi click vào liên kết 'Bạn quên mật khẩu đăng nhập ?', hệ thống chuyển hướng đúng trang khôi phục mật khẩu.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Khôi phục mật khẩu")
+    public void testForgotPasswordLink() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        WebElement forgotPasswordLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(@href, '/Login/GetPass')]")));
+        assertThat(forgotPasswordLink.getText()).contains("Bạn quên mật khẩu đăng nhập ?");
+
+        takeScreenshot("TC8_Truoc_Khi_Click_Quen_Mat_Khau");
+        forgotPasswordLink.click();
+
+        // Đợi chuyển hướng sang /Login/GetPass
+        wait.until(ExpectedConditions.urlContains("/Login/GetPass"));
+        assertThat(driver.getCurrentUrl()).contains("/Login/GetPass");
+
+        takeScreenshot("TC8_Sau_Khi_Vao_Trang_Quen_Mat_Khau");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

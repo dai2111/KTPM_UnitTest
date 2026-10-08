@@ -137,6 +137,24 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("Test 3: Điền tài khoản nhưng không điền mật khẩu")
+    @Description("Kiểm tra phản hồi của hệ thống khi để trống mật khẩu.")
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Đăng nhập không điền mật khẩu")
+    public void testLoginWithUsernameOnly() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("huongnt", "");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        takeScreenshot("Ket_Qua_Khong_Dien_Mat_Khau");
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

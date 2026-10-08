@@ -1,0 +1,31 @@
+# Maven build output
+target/
+*.class
+
+# Allure report cache and binaries
+.allure/
+allure-results/
+allure-report/
+
+# IDE configurations
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.ipr
+*.iws
+
+# Logs
+*.log
+log/
+logs/
+
+# Java crash logs
+hs_err_pid*
+replay_pid*
+
+# OS temporary files
+.DS_Store
+Thumbs.db

@@ -387,6 +387,27 @@ public class UtcLoginTest {
         pause(700);
     }
 
+    @Test
+    @DisplayName("TC16: Đăng nhập sai mật khẩu 5 lần liên tiếp")
+    @Description("Kiểm tra khi nhập sai mật khẩu nhiều lần liên tiếp (5 lần), hệ thống tiếp tục từ chối đăng nhập và giữ an toàn.")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Bảo mật chống tấn công Brute-force")
+    public void testMultipleFailedLoginAttempts() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("-> Thử đăng nhập sai lần thứ: " + i);
+            doLogin("huongnt", "wrongpass_" + i);
+            wait.until(ExpectedConditions.urlContains("/Login"));
+            assertThat(driver.getCurrentUrl()).contains("/Login");
+            takeScreenshot("TC16_Lan_Thu_Sai_" + i);
+            pause(400);
+        }
+
+        pause(700);
+    }
+
     @AfterEach
     public void tearDown() {
         pause(1000);

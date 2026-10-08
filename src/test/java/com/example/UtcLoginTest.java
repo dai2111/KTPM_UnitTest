@@ -48,6 +48,18 @@ public class UtcLoginTest {
         return new byte[0];
     }
 
+    @Step("Nhập dữ liệu vào ô: {elementName}")
+    private void slowType(WebElement element, String text, String elementName) {
+        element.clear();
+        if (text != null && !text.isEmpty()) {
+            for (char c : text.toCharArray()) {
+                element.sendKeys(String.valueOf(c));
+                pause(50);
+            }
+        }
+        pause(500);
+    }
+
     @BeforeEach
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
@@ -60,6 +72,26 @@ public class UtcLoginTest {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+    @Step("Thực hiện điền thông tin đăng nhập: tài khoản = '{username}', mật khẩu = '{password}'")
+    private void doLogin(String username, String password) {
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameBy));
+        WebElement passwordField = driver.findElement(passwordBy);
+        WebElement submitButton = driver.findElement(submitButtonBy);
+
+        pause(500);
+
+        slowType(usernameField, username, "Tên đăng nhập");
+        slowType(passwordField, password, "Mật khẩu");
+
+        takeScreenshot("Truoc_Khi_Bam_Dang_Nhap");
+        pause(500);
+
+        submitButton.click();
+        pause(700);
+
+        takeScreenshot("Sau_Khi_Bam_Dang_Nhap");
+    }
+
     @Test
     @DisplayName("Test 1: Mở trang web đăng nhập UTC và đóng lại")
     @Description("Kiểm tra mở trình duyệt, tải trang đăng nhập thành công và hiển thị đủ các trường.")
@@ -69,10 +101,8 @@ public class UtcLoginTest {
         driver.get(LOGIN_URL);
         pause(700);
 
-        // Kiểm tra tiêu đề trang
         assertThat(driver.getTitle()).isEqualTo("Đăng nhập");
 
-        // Kiểm tra các phần tử HTML chính tồn tại trên giao diện
         WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameBy));
         WebElement passwordField = driver.findElement(passwordBy);
         WebElement submitButton = driver.findElement(submitButtonBy);
@@ -83,6 +113,27 @@ public class UtcLoginTest {
         assertThat(submitButton.getAttribute("value")).isEqualTo("Đăng nhập");
 
         takeScreenshot("Giao_Dien_Trang_Dang_Nhap");
+        pause(700);
+    }
+
+    @Test
+    @DisplayName("Test 2: Đăng nhập tài khoản huongnt và mật khẩu sai (123456@utc)")
+    @Description("Kiểm tra thông báo lỗi khi người dùng nhập sai thông tin tài khoản hoặc mật khẩu.")
+    @Severity(SeverityLevel.CRITICAL)
+    @Story("Đăng nhập thất bại do sai thông tin")
+    public void testLoginWithInvalidCredentials() {
+        driver.get(LOGIN_URL);
+        pause(500);
+
+        doLogin("huongnt", "123456@utc");
+
+        wait.until(ExpectedConditions.urlContains("/Login"));
+        assertThat(driver.getCurrentUrl()).contains("/Login");
+
+        String pageSource = driver.getPageSource();
+        assertThat(pageSource).containsAnyOf("Tài khoản hoặc mật khẩu không đúng", "không đúng", "Login");
+
+        takeScreenshot("Ket_Qua_Dang_Nhap_Sai");
         pause(700);
     }
 

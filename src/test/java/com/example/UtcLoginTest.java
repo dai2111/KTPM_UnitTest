@@ -1,0 +1,96 @@
+package com.example;
+
+import io.qameta.allure.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Epic("Hệ thống Văn phòng điện tử UTC")
+@Feature("Kiểm thử Chức năng Đăng nhập")
+public class UtcLoginTest {
+
+    private static final String LOGIN_URL = "https://vanphongdientu.utc.edu.vn/Login";
+    
+    private final By usernameBy = By.name("username");
+    private final By passwordBy = By.name("userpwd");
+    private final By submitButtonBy = By.cssSelector("input.submit_login");
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+
+    private void pause(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Attachment(value = "Ảnh chụp màn hình: {name}", type = "image/png")
+    private byte[] takeScreenshot(String name) {
+        if (driver instanceof TakesScreenshot) {
+            return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        }
+        return new byte[0];
+    }
+
+    @BeforeEach
+    public void setUp() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+
+        driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    @Test
+    @DisplayName("Test 1: Mở trang web đăng nhập UTC và đóng lại")
+    @Description("Kiểm tra mở trình duyệt, tải trang đăng nhập thành công và hiển thị đủ các trường.")
+    @Severity(SeverityLevel.BLOCKER)
+    @Story("Mở và đóng trang web")
+    public void testOpenAndCloseBrowser() {
+        driver.get(LOGIN_URL);
+        pause(700);
+
+        // Kiểm tra tiêu đề trang
+        assertThat(driver.getTitle()).isEqualTo("Đăng nhập");
+
+        // Kiểm tra các phần tử HTML chính tồn tại trên giao diện
+        WebElement usernameField = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameBy));
+        WebElement passwordField = driver.findElement(passwordBy);
+        WebElement submitButton = driver.findElement(submitButtonBy);
+
+        assertThat(usernameField.isDisplayed()).isTrue();
+        assertThat(passwordField.isDisplayed()).isTrue();
+        assertThat(submitButton.isDisplayed()).isTrue();
+        assertThat(submitButton.getAttribute("value")).isEqualTo("Đăng nhập");
+
+        takeScreenshot("Giao_Dien_Trang_Dang_Nhap");
+        pause(700);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        pause(1000);
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}

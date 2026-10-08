@@ -1,84 +1,28 @@
-# Test Case Specifications - UTC Login Portal
+# Full Test Case Specifications - UTC Login Portal
 
 **Project:** Software Testing (KTPM)  
 **Target URL:** `https://vanphongdientu.utc.edu.vn/Login`  
 **Test Framework:** Selenium WebDriver 4.x + JUnit 5 + Allure Report  
 **Browser:** Google Chrome  
+**Excel Specification:** `TEST_CASES.xlsx` / `TEST_CASES_FULL.xlsx`
 
 ---
 
-## Summary of Test Cases
+## 📋 Summary of All Implemented Test Cases
 
-| Test Case ID | Test Case Title | Test Type | Priority | Expected Result | Status |
+| Test Case ID | Feature | Test Case Title | Test Type | Priority | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **TC_LOGIN_01** | Verify opening and closing the UTC login page | Functional / Smoke | High | Web page loads successfully with title "Đăng nhập", all login fields are visible, and browser closes cleanly. | **PASSED** |
-| **TC_LOGIN_02** | Verify login failure with invalid username and password | Negative Functional | Critical | Error message displayed ("Tài khoản hoặc mật khẩu không đúng"), user remains on the `/Login` page. | **PASSED** |
-| **TC_LOGIN_03** | Verify login failure when entering username only (empty password) | Negative Functional / Validation | High | Form is submitted, user is prevented from logging in and remains on the `/Login` page. | **PASSED** |
-| **TC_LOGIN_04** | Verify login failure when entering password only (empty username) | Negative Functional / Validation | High | Form is submitted, user is prevented from logging in and remains on the `/Login` page. | **PASSED** |
-
----
-
-## Detailed Test Case Specifications
-
-### TC_LOGIN_01: Verify opening and closing the UTC login page
-- **Objective:** Ensure the UTC login portal is reachable, elements are rendered properly, and the session can be closed cleanly.
-- **Preconditions:** Chrome browser installed, network connection available.
-- **Test Steps:**
-  1. Launch the Chrome browser instance.
-  2. Navigate to `https://vanphongdientu.utc.edu.vn/Login`.
-  3. Verify the browser title is `"Đăng nhập"`.
-  4. Verify the username input field (`name="username"`), password input field (`name="userpwd"`), and submit button (`input.submit_login`) are displayed.
-  5. Close the browser.
-- **Test Data:** N/A
-- **Expected Result:** Page renders with all necessary login components and terminates without errors.
-- **Automation Method:** `testOpenAndCloseBrowser()` in `UtcLoginTest.java`
-
----
-
-### TC_LOGIN_02: Verify login failure with invalid username and password
-- **Objective:** Verify that system rejects authentication with non-existent or incorrect credentials.
-- **Preconditions:** User is on the login page `https://vanphongdientu.utc.edu.vn/Login`.
-- **Test Steps:**
-  1. Locate username input field and enter `"huongnt"`.
-  2. Locate password input field and enter `"123456@utc"`.
-  3. Click the `"Đăng nhập"` submit button.
-  4. Wait for server response.
-  5. Verify that the URL contains `/Login`.
-  6. Verify that an error message (e.g., `"Tài khoản hoặc mật khẩu không đúng"`) is rendered.
-- **Test Data:**
-  - `Username`: `huongnt`
-  - `Password`: `123456@utc`
-- **Expected Result:** Login is rejected, user remains on the login page, error notification appears.
-- **Automation Method:** `testLoginWithInvalidCredentials()` in `UtcLoginTest.java`
-
----
-
-### TC_LOGIN_03: Verify login failure when entering username only (empty password)
-- **Objective:** Verify system behavior when the password field is left empty.
-- **Preconditions:** User is on the login page `https://vanphongdientu.utc.edu.vn/Login`.
-- **Test Steps:**
-  1. Locate username input field and enter `"huongnt"`.
-  2. Leave password input field blank.
-  3. Click the `"Đăng nhập"` submit button.
-  4. Verify the system does not authenticate and remains on `/Login`.
-- **Test Data:**
-  - `Username`: `huongnt`
-  - `Password`: `""` (Empty string)
-- **Expected Result:** Authentication is not granted, user stays on the `/Login` page.
-- **Automation Method:** `testLoginWithUsernameOnly()` in `UtcLoginTest.java`
-
----
-
-### TC_LOGIN_04: Verify login failure when entering password only (empty username)
-- **Objective:** Verify system behavior when the username field is left empty.
-- **Preconditions:** User is on the login page `https://vanphongdientu.utc.edu.vn/Login`.
-- **Test Steps:**
-  1. Leave username input field blank.
-  2. Locate password input field and enter `"123456@utc"`.
-  3. Click the `"Đăng nhập"` submit button.
-  4. Verify the system does not authenticate and remains on `/Login`.
-- **Test Data:**
-  - `Username`: `""` (Empty string)
-  - `Password`: `123456@utc`
-- **Expected Result:** Authentication is not granted, user stays on the `/Login` page.
-- **Automation Method:** `testLoginWithPasswordOnly()` in `UtcLoginTest.java`
+| **TC_LOGIN_01** | Authentication | Verify opening and closing UTC login page | Functional / Smoke | Blocker | **PASSED** |
+| **TC_LOGIN_02** | Authentication | Verify login failure with invalid credentials (TC3 in spec) | Negative Functional | Critical | **PASSED** |
+| **TC_LOGIN_03** | Authentication | Verify login failure when entering username only (TC2 in spec) | Negative / Validation | High | **PASSED** |
+| **TC_LOGIN_04** | Authentication | Verify login failure when entering password only (TC1 in spec) | Negative / Validation | High | **PASSED** |
+| **TC_LOGIN_05** | Authentication | Verify login failure with non-existent username (TC4 in spec) | Negative Functional | Critical | **PASSED** |
+| **TC_LOGIN_06** | SSO / OAuth | Verify login with UTC email redirects to Google OAuth (TC7 in spec) | Functional / Integration | Normal | **PASSED** |
+| **TC_LOGIN_07** | Account Recovery | Verify Forgot Password link redirects to recovery page (TC8 in spec) | Functional / Navigation | Normal | **PASSED** |
+| **TC_LOGIN_08** | Authentication | Verify login failure when both fields are empty (TC9 in spec) | Negative / Validation | Normal | **PASSED** |
+| **TC_LOGIN_09** | Security / UI | Verify password field is masked with type='password' (TC10 in spec) | Security / UI | Critical | **PASSED** |
+| **TC_LOGIN_10** | Keyboard Nav | Verify submitting login form by pressing Enter key (TC11 in spec) | Functional / Usability | Normal | **PASSED** |
+| **TC_LOGIN_11** | Keyboard Nav | Verify Tab key switches focus from username to password (TC12 in spec) | Usability / Accessibility | Minor | **PASSED** |
+| **TC_LOGIN_12** | Footer Nav | Verify Help Center & Feedback footer links (TC13, TC14 in spec) | Navigation / UI | Minor | **PASSED** |
+| **TC_LOGIN_13** | Input Sanitization | Verify login handling with whitespace in username (TC15 in spec) | Negative / Validation | Normal | **PASSED** |
+| **TC_LOGIN_14** | Security | Verify system security on multiple consecutive failed logins (TC16 in spec) | Security / Reliability | Critical | **PASSED** |
